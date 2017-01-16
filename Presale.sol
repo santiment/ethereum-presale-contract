@@ -5,6 +5,8 @@ pragma solidity ^0.4.6;
 // this contract manages pre-sale crowdfunding
 
 contract Presale {
+   string public __VERSION = "0.1.1";
+
     mapping (address => uint) public balances;
     uint public presale_start;
     uint public presale_end;
