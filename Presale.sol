@@ -73,7 +73,7 @@ contract Presale {
 
 
     function withdrawFunds()
-    onPresaleSuccessOnly
+    onWithdrawalAllowedOnly
     onlyOwner
     {
         // transfer funds to owner if any
@@ -132,13 +132,15 @@ contract Presale {
     }
 
 
-    modifier onPresaleSuccessOnly() {
+    modifier onWithdrawalAllowedOnly() {
         // fails if min goal is not reached
         if (total_received_amount < MIN_TOTAL_AMOUNT_TO_RECEIVE) throw;
 
         // fails if presale is still running AND max goal is not met yet
         if (block.number < presale_end && total_received_amount < MAX_TOTAL_AMOUNT_TO_RECEIVE) throw;
 
+        // fails after withdrawal deadline passes
+        if (block.number > withdrawal_end) throw;
         _;
     }
 
