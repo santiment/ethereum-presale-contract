@@ -5,7 +5,7 @@ pragma solidity ^0.4.6;
 // this contract manages pre-sale crowdfunding
 
 contract Presale {
-   string public __VERSION = "0.1.1";
+    string public constant VERSION = "0.1.1";
 
     mapping (address => uint) public balances;
     uint public presale_start;
@@ -14,11 +14,14 @@ contract Presale {
 
     uint public total_received_amount;
 
-    uint public MIN_TOTAL_AMOUNT_TO_RECEIVE = 5000 ether;
-    uint public MAX_TOTAL_AMOUNT_TO_RECEIVE = 15000 ether;
-    uint public MIN_ACCEPTED_AMOUNT = 1 finney;
+    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5000;
+    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 15000;
+    uint public constant MIN_ACCEPTED_AMOUNT = 1 finney;
 
     address public owner;
+
+    uint private constant MIN_TOTAL_AMOUNT_TO_RECEIVE = MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
+    uint private constant MAX_TOTAL_AMOUNT_TO_RECEIVE = MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
 
 
     function Presale (uint _presale_start, uint _presale_end, uint _withdrawal_end, address _owner)
