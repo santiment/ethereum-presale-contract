@@ -5,7 +5,7 @@ pragma solidity ^0.4.6;
 // @author ethernian
 
 contract Presale {
-    string public constant VERSION = "0.1.2";
+    string public constant VERSION = "0.1.2-[min50,max150]";
 
     mapping (address => uint) public balances;
     uint public presale_start;
@@ -14,9 +14,9 @@ contract Presale {
 
     uint public total_received_amount;
 
-    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5000;
-    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 15000;
-    uint public constant MIN_ACCEPTED_AMOUNT_FINNEY = 1 finney;
+    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5;
+    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 150;
+    uint public constant MIN_ACCEPTED_AMOUNT_FINNEY = 1;
 
     address public owner;
 
