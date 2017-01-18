@@ -5,7 +5,7 @@ pragma solidity ^0.4.6;
 // @author ethernian
 
 contract Presale {
-    string public constant VERSION = "0.1.1";
+    string public constant VERSION = "0.1.2";
 
     mapping (address => uint) public balances;
     uint public presale_start;
@@ -16,13 +16,14 @@ contract Presale {
 
     uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5000;
     uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 15000;
-    uint public constant MIN_ACCEPTED_AMOUNT = 1 finney;
+    uint public constant MIN_ACCEPTED_AMOUNT_FINNEY = 1 finney;
 
     address public owner;
 
     uint private constant MIN_TOTAL_AMOUNT_TO_RECEIVE = MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
     uint private constant MAX_TOTAL_AMOUNT_TO_RECEIVE = MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
-
+    uint private constant MIN_ACCEPTED_AMOUNT = MIN_ACCEPTED_AMOUNT_FINNEY * 1 finney;
+	
     string[4] private stateNames = ["BEFORE_START",  "PRESALE_RUNNING", "WITHDRAWAL_RUNNING", "REFUND_RUNNING" ];
     enum State { BEFORE_START,  PRESALE_RUNNING, WITHDRAWAL_RUNNING, REFUND_RUNNING }
 
