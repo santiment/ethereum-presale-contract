@@ -5,38 +5,31 @@ pragma solidity ^0.4.6;
 // @author ethernian
 
 contract Presale {
-    string public constant VERSION = "0.1.2-[min50,max150]";
+    string public constant VERSION = "0.1.3-[min1,max5]";
 
-    mapping (address => uint) public balances;
-    uint public presale_start;
-    uint public presale_end;
-    uint public withdrawal_end;
-
-    uint public total_received_amount;
-
-    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5;
-    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 150;
+	/* ====== configuration START ====== */
+    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 1;
+    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5;
     uint public constant MIN_ACCEPTED_AMOUNT_FINNEY = 1;
-
-    address public owner;
-
-    uint private constant MIN_TOTAL_AMOUNT_TO_RECEIVE = MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
-    uint private constant MAX_TOTAL_AMOUNT_TO_RECEIVE = MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
-    uint private constant MIN_ACCEPTED_AMOUNT = MIN_ACCEPTED_AMOUNT_FINNEY * 1 finney;
+	uint public constant PRESALE_START = 0x0;
+	uint public constant PRESALE_END = 0x0;
+	uint public constant WITHDRAWAL_END = 0x0;
+	address public constant OWNER = 0x0;
+    /* ====== configuration END ====== */
 	
     string[4] private stateNames = ["BEFORE_START",  "PRESALE_RUNNING", "WITHDRAWAL_RUNNING", "REFUND_RUNNING" ];
     enum State { BEFORE_START,  PRESALE_RUNNING, WITHDRAWAL_RUNNING, REFUND_RUNNING }
 
+    uint public total_received_amount;
+	mapping (address => uint) public balances;
+	
+    uint private constant MIN_TOTAL_AMOUNT_TO_RECEIVE = MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
+    uint private constant MAX_TOTAL_AMOUNT_TO_RECEIVE = MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
+    uint private constant MIN_ACCEPTED_AMOUNT = MIN_ACCEPTED_AMOUNT_FINNEY * 1 finney;
+	
+
     //constructor
-    function Presale (uint _presale_start, uint _presale_end, uint _withdrawal_end, address _owner)
-    inFutureOnly(_presale_start)
-    validSetupOnly(_presale_start, _presale_end, _withdrawal_end, _owner)
-    {
-        presale_start = _presale_start;
-        presale_end   = _presale_end;
-        withdrawal_end = _withdrawal_end;
-        owner = _owner;
-    }
+    function Presale () validSetupOnly() { }
 
     //
     // ======= interface methods =======
@@ -73,7 +66,7 @@ contract Presale {
     {
         // transfer funds to owner if any
         if (this.balance > 0) {
-            if (!owner.send(this.balance)) throw;
+            if (!OWNER.send(this.balance)) throw;
         }
     }
 
@@ -119,11 +112,11 @@ contract Presale {
 
 
     function currentState() private constant returns (State) {
-        if (block.number < presale_start) {
+        if (block.number < PRESALE_START) {
             return State.BEFORE_START;
-        } else if (block.number <= presale_end && total_received_amount < MAX_TOTAL_AMOUNT_TO_RECEIVE) {
+        } else if (block.number <= PRESALE_END && total_received_amount < MAX_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.PRESALE_RUNNING;
-        } else if (block.number <= withdrawal_end && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
+        } else if (block.number <= WITHDRAWAL_END && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.WITHDRAWAL_RUNNING;
         } else {
             return State.REFUND_RUNNING;
@@ -142,33 +135,31 @@ contract Presale {
 
 
     //fails if something is looking weird
-    modifier validSetupOnly(uint _presale_start, uint _presale_end, uint _withdrawal_end, address _owner) {
-        if (_presale_start >= _presale_end) throw;
-        if (_presale_end   >= _withdrawal_end) throw;
-        if (_owner == 0) throw;
-        if (MIN_TOTAL_AMOUNT_TO_RECEIVE > MAX_TOTAL_AMOUNT_TO_RECEIVE) throw;
-        _;
-    }
-
-
-    //fails start block number is already passed
-    modifier inFutureOnly(uint block_number) {
-        if (block_number <= block.number) throw;
+    modifier validSetupOnly() {
+        if ( OWNER == 0x0 
+            || PRESALE_START == 0 
+            || PRESALE_END == 0 
+            || WITHDRAWAL_END ==0
+            || PRESALE_START <= block.number
+            || PRESALE_START >= PRESALE_END
+            || PRESALE_END   >= WITHDRAWAL_END
+            || MIN_TOTAL_AMOUNT_TO_RECEIVE > MAX_TOTAL_AMOUNT_TO_RECEIVE )
+				throw;
         _;
     }
 
 
     //accepts calls from owner only
     modifier onlyOwner(){
-    	  if (msg.sender != owner)  throw;
-    	  _;
+    	if (msg.sender != OWNER)  throw;
+    	_;
     }
 
 
     //accepts calls from token holders only
     modifier tokenHoldersOnly(){
-    	  if (balances[msg.sender] == 0) throw;
-    	  _;
+        if (balances[msg.sender] == 0) throw;
+        _;
     }
 
 
