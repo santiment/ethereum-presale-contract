@@ -2,7 +2,15 @@ pragma solidity ^0.4.6;
 
 // Presale Smart Contract
 //
+// **** START:  PARANOIA DISCLAIMER ****
+// A carefull reader will find here some unnecessary checks and excessive code consuming some extra valueable gas. It is intentionally. 
+// Even contract will works without these parts, they make the code more secure in production as well for future refactorings.
+// Additionally it shows more clearly what we have took care of.
+// You are welcome to discuss that places.
+// **** END OF: PARANOIA DISCLAIMER *****
+//
 // @author ethernian
+//
 
 contract Presale {
     string public constant VERSION = "0.1.3-[min1,max5]";
@@ -136,7 +144,7 @@ contract Presale {
     }
 
 
-    //fails if something is looking weird
+    //fails if something in setup is looking weird
     modifier validSetupOnly() {
         if ( OWNER == 0x0 
             || PRESALE_START == 0 
@@ -166,7 +174,7 @@ contract Presale {
 
 
     // don`t accept transactions with value less than allowed minimum
-    modifier notTooSmallAmountOnly(){
+    modifier notTooSmallAmountOnly(){	
         if (msg.value < MIN_ACCEPTED_AMOUNT) throw;
         _;
     }
