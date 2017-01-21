@@ -17,8 +17,8 @@ contract Presale {
 	address public constant OWNER = 0x0;
     /* ====== configuration END ====== */
 	
-    string[4] private stateNames = ["BEFORE_START",  "PRESALE_RUNNING", "WITHDRAWAL_RUNNING", "REFUND_RUNNING" ];
-    enum State { BEFORE_START,  PRESALE_RUNNING, WITHDRAWAL_RUNNING, REFUND_RUNNING }
+    string[5] private stateNames = ["BEFORE_START",  "PRESALE_RUNNING", "WITHDRAWAL_RUNNING", "REFUND_RUNNING", "CLOSED" ];
+    enum State { BEFORE_START,  PRESALE_RUNNING, WITHDRAWAL_RUNNING, REFUND_RUNNING, CLOSED }
 
     uint public total_received_amount;
 	mapping (address => uint) public balances;
@@ -118,9 +118,11 @@ contract Presale {
             return State.PRESALE_RUNNING;
         } else if (block.number <= WITHDRAWAL_END && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.WITHDRAWAL_RUNNING;
-        } else {
+        } else if (this.balance > 0){
             return State.REFUND_RUNNING;
-        }
+        } else {
+            return State.CLOSED;		
+		} 
     }
 
     //
