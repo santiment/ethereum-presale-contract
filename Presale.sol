@@ -135,13 +135,13 @@ contract Presale {
             return State.BEFORE_START;
         } else if (block.number <= PRESALE_END && total_received_amount < MAX_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.PRESALE_RUNNING;
-        } else if (block.number <= WITHDRAWAL_END && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
+        } else if (this.balance == 0) {
+		    return State.CLOSED;
+		} else if (block.number <= WITHDRAWAL_END && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.WITHDRAWAL_RUNNING;
-        } else if (this.balance > 0){
-            return State.REFUND_RUNNING;
         } else {
-            return State.CLOSED;		
-		} 
+            return State.REFUND_RUNNING;
+        } 
     }
 
     //
