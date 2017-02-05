@@ -174,9 +174,9 @@ contract Presale {
         _;
     }
 
-    //fails if state is not less than given
+    //fails if the current state is not before than the given one.
     modifier inStateBefore(State state) {
-        if (state >= currentState()) throw;
+        if (currentState() >= state) throw;
         _;
     }
 
