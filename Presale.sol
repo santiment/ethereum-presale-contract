@@ -33,30 +33,31 @@ contract Presale {
 
     string public constant VERSION = "0.1.4-beta";
 
-	/* ====== configuration START ====== */
+    /* ====== configuration START ====== */
 
-	uint public constant PRESALE_START  = 3044593;    /* approx. 22.01.2017 20:00 CET */
-	uint public constant PRESALE_END    = 3048913;    /* approx. 23.01.2017 14:00 CET */
-	uint public constant WITHDRAWAL_END = 3049873;    /* approx. 23.01.2017 18:00 CET */
+    uint public constant PRESALE_START  = 3044593;    /* approx. 22.01.2017 20:00 CET */
+    uint public constant PRESALE_END    = 3048913;    /* approx. 23.01.2017 14:00 CET */
+    uint public constant WITHDRAWAL_END = 3049873;    /* approx. 23.01.2017 18:00 CET */
 
-	address public constant OWNER = 0x45d5426471D12b21C3326dD0cF96f6656F7d14b1;
-	
+    address public constant OWNER = 0x45d5426471D12b21C3326dD0cF96f6656F7d14b1;
+
     uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 1;
     uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5;
     uint public constant MIN_ACCEPTED_AMOUNT_FINNEY = 1;
 
     /* ====== configuration END ====== */
-	
+
     string[5] private stateNames = ["BEFORE_START",  "PRESALE_RUNNING", "WITHDRAWAL_RUNNING", "REFUND_RUNNING", "CLOSED" ];
     enum State { BEFORE_START,  PRESALE_RUNNING, WITHDRAWAL_RUNNING, REFUND_RUNNING, CLOSED }
 
     uint public total_received_amount;
-	mapping (address => uint) public balances;
-	
+    mapping (address => uint) public balances;
+
     uint private constant MIN_TOTAL_AMOUNT_TO_RECEIVE = MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
     uint private constant MAX_TOTAL_AMOUNT_TO_RECEIVE = MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH * 1 ether;
     uint private constant MIN_ACCEPTED_AMOUNT = MIN_ACCEPTED_AMOUNT_FINNEY * 1 finney;
-	
+    bool public isAborted = false;
+
 
     //constructor
     function Presale () validSetupOnly() { }
@@ -98,6 +99,12 @@ contract Presale {
         if (!OWNER.send(this.balance)) throw;
     }
 
+    function abort() external
+    inStateBefore(State.REFUND_RUNNING)
+    onlyOwner
+    {
+        isAborted = true;
+    }
 
     //displays current contract state in human readable form
     function state()  external constant
@@ -140,13 +147,17 @@ contract Presale {
 
 
     function currentState() private constant returns (State) {
-        if (block.number < PRESALE_START) {
+        if (isAborted) {
+            return this.balance > 0 
+                   ? State.REFUND_RUNNING 
+                   : State.CLOSED;
+        } else if (block.number < PRESALE_START) {
             return State.BEFORE_START;
         } else if (block.number <= PRESALE_END && total_received_amount < MAX_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.PRESALE_RUNNING;
         } else if (this.balance == 0) {
-		    return State.CLOSED;
-		} else if (block.number <= WITHDRAWAL_END && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
+            return State.CLOSED;
+        } else if (block.number <= WITHDRAWAL_END && total_received_amount >= MIN_TOTAL_AMOUNT_TO_RECEIVE) {
             return State.WITHDRAWAL_RUNNING;
         } else {
             return State.REFUND_RUNNING;
@@ -163,6 +174,11 @@ contract Presale {
         _;
     }
 
+    //fails if state is not less than given
+    modifier inStateBefore(State state) {
+        if (state >= currentState()) throw;
+        _;
+    }
 
     //fails if something in setup is looking weird
     modifier validSetupOnly() {
@@ -174,15 +190,15 @@ contract Presale {
             || PRESALE_START >= PRESALE_END
             || PRESALE_END   >= WITHDRAWAL_END
             || MIN_TOTAL_AMOUNT_TO_RECEIVE > MAX_TOTAL_AMOUNT_TO_RECEIVE )
-				throw;
+                throw;
         _;
     }
 
 
     //accepts calls from owner only
     modifier onlyOwner(){
-    	if (msg.sender != OWNER)  throw;
-    	_;
+        if (msg.sender != OWNER)  throw;
+        _;
     }
 
 
