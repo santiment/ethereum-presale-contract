@@ -84,9 +84,7 @@ contract Presale {
     noReentrancy
     {
         // transfer funds to owner if any
-        if (this.balance > 0) {
-            if (!OWNER.send(this.balance)) throw;
-        }
+        if (!OWNER.send(this.balance)) throw;
     }
 
 
