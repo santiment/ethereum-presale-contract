@@ -1,26 +1,37 @@
 pragma solidity ^0.4.6;
 
-// Presale Smart Contract
 //
-// **** START:  WORK IN PROGRESS DISCLAIMER ****
-// This is a work in progress and not intended for reuse.
-// So don't reuse unless you know exactly what are you doing! 
-// **** END:  WORK IN PROGRESS DISCLAIMER ****
+// ==== DISCLAIMER ====
 //
-// **** START:  PARANOIA DISCLAIMER ****
+// ETHEREUM IS STILL AN EXPEREMENTAL TECHNOLOGY.
+// ALTHOUGH THIS SMART CONTRACT CREATED WITH GREAT CARE AND IN HOPE TO BE USEFUL, NO GUARANTEES OF FLAWLES OPERATION CAN BE GIVEN. 
+// ESPECIALLY SUBTILE BUGS, HACKER ATTACS OR MALFUNCTION OF UNDERLYING TECHNOLOGY CAN CAUSE AN UNINTENTIONAL BEHAVIOUR. 
+// YOU ARE DEEPLY ENCORAGED TO STUDY THIS SMART CONTRACT CAREFULLY IN ORDER TO UNDERSTAND POSSIBLE EDGE CASES AND RISKS. 
+// DON'T USE THIS SMART CONTRACT IN CASE OF ANY SUBSTANTIONAL DOUBTS OR IF YOU DON'T KNOW WHAT ARE YOU DOING.
+//
+// THIS SOFTWARE IS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+// AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, 
+// INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
+// OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, 
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// ====
+//
+//
+// ==== PARANOIA NOTICE ==== 
 // A careful reader will find here some unnecessary checks and excessive code consuming some extra valuable gas. It is intentionally. 
-// Even contract will works without these parts, they make the code more secure in production as well for future refactoring.
+// Even contract should works without these parts, they make the code more secure in production as well for future refactoring.
 // Additionally it shows more clearly what we have took care of.
 // You are welcome to discuss that places.
-// **** END OF: PARANOIA DISCLAIMER *****
+// ====
 //
-//
-// @author ethernian
-//
+
+/// @author ethernian
+/// @notice report bugs to: bugs@ethernian.com
+/// @title Presale Contract
 
 contract Presale {
 
-    string public constant VERSION = "0.1.3-beta";
+    string public constant VERSION = "0.1.4-beta";
 
 	/* ====== configuration START ====== */
 
