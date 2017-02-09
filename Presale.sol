@@ -31,18 +31,17 @@ pragma solidity ^0.4.6;
 
 contract Presale {
 
-    string public constant VERSION = "0.1.4-beta";
+    string public constant VERSION = "0.1.4";
 
     /* ====== configuration START ====== */
+    uint public constant PRESALE_START  = 3172723; /* approx. 12.02.2017 23:50 */
+    uint public constant PRESALE_END    = 3302366; /* approx. 06.03.2017 00:00 */
+    uint public constant WITHDRAWAL_END = 3678823; /* approx. 06.05.2017 00:00 */
 
-    uint public constant PRESALE_START  = 3044593;    /* approx. 22.01.2017 20:00 CET */
-    uint public constant PRESALE_END    = 3048913;    /* approx. 23.01.2017 14:00 CET */
-    uint public constant WITHDRAWAL_END = 3049873;    /* approx. 23.01.2017 18:00 CET */
+    address public constant OWNER = 0xE76fE52a251C8F3a5dcD657E47A6C8D16Fdf4bFA;
 
-    address public constant OWNER = 0x45d5426471D12b21C3326dD0cF96f6656F7d14b1;
-
-    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 1;
-    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 5;
+    uint public constant MIN_TOTAL_AMOUNT_TO_RECEIVE_ETH = 4000;
+    uint public constant MAX_TOTAL_AMOUNT_TO_RECEIVE_ETH = 12000;
     uint public constant MIN_ACCEPTED_AMOUNT_FINNEY = 1;
 
     /* ====== configuration END ====== */
